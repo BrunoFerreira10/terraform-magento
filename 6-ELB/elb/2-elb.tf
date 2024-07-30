@@ -21,7 +21,7 @@ resource "aws_lb_target_group" "tgrp-1-alb-1" {
   health_check {
     enabled             = true
     protocol            = "HTTP"
-    path                = "/"
+    path                = "/health_check.php"
     port                = 80
     interval            = 60
     timeout             = 20
