@@ -17,7 +17,7 @@ resource "aws_instance" "ec2-update" {
 
   user_data_replace_on_change = true
   user_data = templatefile(
-    "${path.module}/userdata-setup-magento.tftpl", {
+    "${path.module}/userdata-update-magento.tftpl", {
       domain-base             = var.domain-base,
       rds-1-endpoint          = split(":", data.terraform_remote_state.remote-state-rds.outputs.rds-rds-1-endpoint)[0],
       rds-1-db-name           = var.rds-1-db-name,
