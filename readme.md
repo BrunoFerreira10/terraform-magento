@@ -38,7 +38,7 @@ Com isso é possível criar e destruir os recursos de forma individual.
 | AWS_DEV_CLI_ADMIN_SECRET                |                                   |
 | AWS_DEV_CLI_ADMIN_SSH_PRIVATE_KEY       |                                   |
 | MAGENTO_ADMIN_PASSWORD                  | your-password                     |
-| MAGENTO_PRIVATE_KEY                     |                                   | Chave publica do Magento gerada em sua contada do Adobe 
+| MAGENTO_PRIVATE_KEY                     |                                   | Chave pública do Magento gerada em sua contada do Adobe 
 | MAGENTO_PUBLIC_KEY                      |                                   | Chave privada do Magento gerada em sua contada do Adobe 
 | RDS_1_DB_PASSWORD                       | your-password                     |
 | REDIS_PASSWORD                          | your-password                     |
