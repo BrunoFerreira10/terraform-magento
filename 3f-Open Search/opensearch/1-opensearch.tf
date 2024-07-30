@@ -4,8 +4,8 @@ resource "aws_opensearch_domain" "opensearch-1" {
   domain_name = "opensearch-${var.shortnameid}-1"
 
   cluster_config {
-    instance_type = "t3.small.search"
-    # instance_type = "t3.medium.search"
+    # instance_type = "t3.small.search"
+    instance_type = "t3.medium.search"
     instance_count           = 1
     # dedicated_master_enabled = true
     # dedicated_master_type    = "t3.small.search"
