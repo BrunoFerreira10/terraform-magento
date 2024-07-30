@@ -56,6 +56,15 @@ sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 512M/' "$PHP_INI_PATH"
 sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHP_INI_PATH"
 sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHP_INI_PATH"
 
+# export PHPFPM_INI_PATH=$(php-fpm8.3 -i | grep "Loaded Configuration File" | awk '{print $5}')
+# sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 512M/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHPFPM_INI_PATH"
+
+
 systemctl restart nginx
 
 # Instalando Composer
