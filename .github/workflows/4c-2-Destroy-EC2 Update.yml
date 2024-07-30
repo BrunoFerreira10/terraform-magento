@@ -34,6 +34,7 @@ jobs:
         terraform destroy -auto-approve \
           -var "regiao=${{env.REGION}}" \
           -var "remote-state-bucket=${{env.REMOTE_STATE_BUCKET}}" \
+          -var "ec2-ssh-keypair-name=${{vars.EC2_SSH_KEYPAIR_NAME}}" \
           -var "domain-base=${{vars.DOMAIN_BASE}}" \
           -var "rds-1-db-name=${{vars.RDS_1_DB_NAME}}" \
           -var "rds-1-db-username=${{vars.RDS_1_DB_USERNAME}}" \

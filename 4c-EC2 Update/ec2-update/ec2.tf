@@ -1,14 +1,13 @@
 resource "aws_instance" "ec2-update" {
   # AMI Base
   ami           = data.terraform_remote_state.remote-ami.outputs.ami-ami-id
-  instance_type = "t3a.large"
-  # instance_type = "t3.micro"
-  # key_name      = "aws-dev-console-admin"
-  key_name  = "aws-services-ec2-ssh"
-  subnet_id = data.terraform_remote_state.remote-state-vpc.outputs.vpcs-subnet-vpc-1-public-1a-id
+  instance_type = "t3a.medium"
+  key_name             = var.ec2-ssh-keypair-name
+  subnet_id            = data.terraform_remote_state.remote-state-vpc.outputs.vpcs-subnet-vpc-1-public-1a-id
+  iam_instance_profile = data.terraform_remote_state.remote-state-s3-static-files.outputs.s3-static-files-magento-ec2-s3-profile-name
 
   root_block_device {
-    volume_size = 10
+    volume_size = 20
   }
 
   vpc_security_group_ids = [
@@ -18,7 +17,7 @@ resource "aws_instance" "ec2-update" {
 
   user_data_replace_on_change = true
   user_data = templatefile(
-    "${path.module}/userdata-update-magento.tftpl", {
+    "${path.module}/userdata-setup-magento.tftpl", {
       domain-base             = var.domain-base,
       rds-1-endpoint          = split(":", data.terraform_remote_state.remote-state-rds.outputs.rds-rds-1-endpoint)[0],
       rds-1-db-name           = var.rds-1-db-name,
@@ -30,7 +29,12 @@ resource "aws_instance" "ec2-update" {
       magento-admin-firstname = var.magento-admin-firstname,
       magento-admin-lastname  = var.magento-admin-lastname,
       magento-admin-user      = var.magento-admin-user,
-      magento-admin-password  = var.magento-admin-password
+      magento-admin-password  = var.magento-admin-password,
+      opensearch-endpoint     = data.terraform_remote_state.remote-state-opensearch.outputs.opensearch-opensearch-1-endpoint,
+      # opensearch-endpoint     = "vpc-opensearch-magento-1-hh6kg7jdj7h5yoheodxeqaqmbm.us-east-1.es.amazonaws.com"
+      redis-endpoint           = data.terraform_remote_state.remote-state-elasticcache.outputs.elasticcache-elasticcache-1-cache-nodes-0-address,
+      static-files-bucket-name = data.terraform_remote_state.remote-state-s3-static-files.outputs.s3-static-files-magento-static-files-bucket,
+      efs-dns-name             = data.terraform_remote_state.remote-state-efs.outputs.efs-efs-1-dns-name
     }
   )
 
