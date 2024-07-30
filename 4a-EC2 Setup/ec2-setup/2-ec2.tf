@@ -1,12 +1,9 @@
 resource "aws_instance" "ec2-setup" {
   # Ubuntu Server 24.04 LTS (HVM), SSD Volume Type
-  ami           = "ami-04b70fa74e45c3917"
-  instance_type = "c7a.large"
-  # instance_type = "t3a.large"
-  # instance_type = "t3.micro"
-  key_name             = "aws-services-ec2-ssh"
+  ami                  = "ami-04b70fa74e45c3917"  
+  instance_type        = "t3.medium"
+  key_name             = var.ec2-ssh-keypair-name
   subnet_id            = data.terraform_remote_state.remote-state-vpc.outputs.vpcs-subnet-vpc-1-public-1a-id
-  # iam_instance_profile = aws_iam_instance_profile.magento-instance-profile.name
   iam_instance_profile = data.terraform_remote_state.remote-state-s3-static-files.outputs.s3-static-files-magento-ec2-s3-profile-name
 
   root_block_device {

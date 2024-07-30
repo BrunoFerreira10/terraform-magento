@@ -26,6 +26,4 @@ jobs:
         chmod 755 ./generate_backend.sh && ./generate_backend.sh
         cd "./${{env.LOCAL_FOLDER}}"
         terraform init -backend-config=./backend.tfvars
-        terraform destroy -auto-approve \
-          -var "regiao=${{env.REGION}}" \
-          -var "remote-state-bucket=${{env.REMOTE_STATE_BUCKET}}"
+        terraform destroy -auto-approve

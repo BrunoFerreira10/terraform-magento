@@ -32,8 +32,9 @@ provider "aws" {
 }
 
 module "s3-static-files" {
-  source              = "./s3-static-files"
-  regiao              = var.regiao
-  remote-state-bucket = var.remote-state-bucket
-  shortnameid         = data.terraform_remote_state.remote-state-information.outputs.shortnameid
+  source                    = "./s3-static-files"
+  regiao                    = var.regiao
+  remote-state-bucket       = var.remote-state-bucket
+  shortnameid               = data.terraform_remote_state.remote-state-information.outputs.shortnameid
+  static-files-bucket-name  = var.static-files-bucket-name
 }

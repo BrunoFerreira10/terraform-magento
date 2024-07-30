@@ -17,3 +17,7 @@ variable "domain-base" {
   type        = string
   description = "Domínio base da aplicação"
 }
+
+variable "ec2-ssh-keypair-name" {
+  type = string
+}

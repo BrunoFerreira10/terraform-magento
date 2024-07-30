@@ -28,4 +28,5 @@ jobs:
         terraform init -backend-config=./backend.tfvars
         terraform apply -auto-approve \
           -var "regiao=${{env.REGION}}" \
-          -var "remote-state-bucket=${{env.REMOTE_STATE_BUCKET}}"
+          -var "remote-state-bucket=${{env.REMOTE_STATE_BUCKET}}" \
+          -var "static-files-bucket-name=${{vars.STATIC_FILES_BUCKET_NAME}}"

@@ -8,15 +8,12 @@ resource "aws_launch_template" "ltplt-1" {
   image_id = data.terraform_remote_state.remote-ami.outputs.ami-ami-id
 
   // Instance type
-  instance_type = "t3a.xlarge"
-  # instance_type = "c7a.medium"
-  # instance_type = "t3.micro"
+  instance_type = "t3a.xlarge"  
 
   // Key pair (ec2 ssh login)  
-  key_name = "aws-services-ec2-ssh"
+  key_name = var.ec2-ssh-keypair-name
 
   iam_instance_profile {
-    # name = aws_iam_instance_profile.magento-instance-profile-ltpl.name
     name = data.terraform_remote_state.remote-state-s3-static-files.outputs.s3-static-files-magento-ec2-s3-profile-name
   }
 

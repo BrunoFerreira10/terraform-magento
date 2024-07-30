@@ -8,6 +8,10 @@ variable "remote-state-bucket" {
   description = "Bucket name onde está o remote state"
 }
 
+variable "ec2-ssh-keypair-name" {
+  type = string
+}
+
 variable "domain-base" {
   type = string
 }

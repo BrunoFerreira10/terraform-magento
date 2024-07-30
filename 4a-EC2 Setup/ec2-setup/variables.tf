@@ -13,6 +13,10 @@ variable "shortnameid" {
   description = "Nome curto para identificacao dos recursos"
 }
 
+variable "ec2-ssh-keypair-name" {
+  type = string
+}
+
 variable "domain-base" {
   type = string
 }

@@ -12,3 +12,7 @@ variable "shortnameid" {
   type        = string
   description = "Nome curto para identificacao dos recursos"
 }
+
+variable "static-files-bucket-name" {
+  type        = string  
+}
