@@ -10,7 +10,7 @@ resource "aws_opensearch_domain" "opensearch-1" {
     # dedicated_master_enabled = true
     # dedicated_master_type    = "t3.small.search"
     # dedicated_master_count   = 1
-    zone_awareness_enabled   = true
+    # zone_awareness_enabled   = true
   }
 
   ebs_options {
