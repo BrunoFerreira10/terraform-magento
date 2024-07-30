@@ -4,3 +4,5 @@
 *tfstate*
 .vscode
 *.txt
+
+/hidden_workflows/
