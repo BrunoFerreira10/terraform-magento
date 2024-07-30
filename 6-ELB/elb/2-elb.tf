@@ -53,6 +53,8 @@ resource "aws_lb" "alb-1" {
 
   enable_deletion_protection = false
 
+  idle_timeout = 600
+
   tags = {
     Name = "alb-${var.shortnameid}-1"
   }
