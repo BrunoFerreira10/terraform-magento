@@ -28,7 +28,12 @@ sudo -u www-data bin/magento setup:install \
   --opensearch-host=localhost \
   --opensearch-port=9200 \
   --opensearch-index-prefix=magento2 \
-  --opensearch-timeout=15 2>&1 | sudo -u www-data tee magento_update_output.log
+  --opensearch-timeout=15 \
+  --remote-storage-driver=aws-s3 \
+  --remote-storage-prefix=magento2 \
+  --remote-storage-bucket=${static-files-bucket-name} \
+  --remote-storage-region=us-east-1 \
+  --remote-storage-path-style=1 2>&1 | sudo -u www-data tee magento_update_output.log
 
 sudo -u www-data bin/magento config:set web/secure/base_url https://${domain-base}/
 sudo -u www-data bin/magento config:set web/secure/base_link_url https://${domain-base}/
