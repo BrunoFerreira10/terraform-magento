@@ -12,8 +12,8 @@ data "terraform_remote_state" "remote-ami" {
   config = {
     region = var.regiao
     bucket = var.remote-state-bucket
-    key    = "AMI Create/terraform.tfstate"
-    # key    = "AMI Update/terraform.tfstate"
+    # key    = "AMI Create/terraform.tfstate"
+    key    = "AMI Update/terraform.tfstate"
   }
 }
 
