@@ -12,6 +12,7 @@ resource "aws_db_subnet_group" "subnet-group-rds-1" {
 }
 
 resource "aws_db_instance" "rds-1" {
+
   db_name              = var.rds-1-db-name
   username             = var.rds-1-db-username
   password             = var.rds-1-db-password

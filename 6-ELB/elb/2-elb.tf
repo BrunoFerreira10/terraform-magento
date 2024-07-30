@@ -106,9 +106,9 @@ resource "aws_autoscaling_group" "asg-alb-1" {
 
   // Group Details  
   capacity_rebalance = true
-  desired_capacity   = 1
-  max_size           = 4
-  min_size           = 1
+  desired_capacity   = 0
+  max_size           = 0
+  min_size           = 0
 
   lifecycle {
     create_before_destroy = true
