@@ -33,7 +33,7 @@ Com isso é possível criar e destruir os recursos de forma individual.
 
 ### Github Secrets
 | Variável                                | Exemplo                           | Detalhes |
-| :---                                    | :---                              | :---     |
+| :---                                    | :---------------                  | :---     |
 | AWS_DEV_CLI_ADMIN_KEY                   |                                   |
 | AWS_DEV_CLI_ADMIN_SECRET                |                                   |
 | AWS_DEV_CLI_ADMIN_SSH_PRIVATE_KEY       |                                   |
