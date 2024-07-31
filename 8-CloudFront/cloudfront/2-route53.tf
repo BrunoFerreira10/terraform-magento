@@ -3,6 +3,34 @@ data "aws_route53_zone" "hosted_zone" {
   private_zone = false
 }
 
+resource "aws_route53_record" "record_A" {
+
+  allow_overwrite = true
+  zone_id         = data.aws_route53_zone.hosted_zone.zone_id
+  name            = var.domain-base
+  type            = "A"
+
+  alias {
+    name                   = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-dns-name
+    zone_id                = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-zone-id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "record_WWW" {
+
+  allow_overwrite = true
+  zone_id         = data.aws_route53_zone.hosted_zone.zone_id
+  name            = "www.${var.domain-base}"
+  type            = "A"
+
+  alias {
+    name                   = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-dns-name
+    zone_id                = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-zone-id
+    evaluate_target_health = true
+  }
+}
+
 resource "aws_route53_record" "record_media" {
 
   allow_overwrite = true

@@ -61,7 +61,7 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
     domain_name = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-dns-name
 
     connection_attempts = 3
-    connection_timeout = 120
+    connection_timeout = 10
     
     custom_origin_config {
       origin_protocol_policy = "match-viewer"
@@ -69,8 +69,8 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
       https_port             = 443
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
 
-      origin_read_timeout = 120
-      origin_keepalive_timeout = 120
+      origin_read_timeout = 30
+      origin_keepalive_timeout = 5
     }
 
     custom_header {
