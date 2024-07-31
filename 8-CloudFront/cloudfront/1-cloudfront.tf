@@ -37,8 +37,8 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
   is_ipv6_enabled = true
   // Aliases = Alternate domains names
   aliases = [
-    "${var.domain-base}", 
-    "www.${var.domain-base}"
+    "static.${var.domain-base}", 
+    "media.${var.domain-base}"
   ]
   // Custom SSL certificate
   viewer_certificate {
@@ -60,11 +60,17 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
     origin_id   = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-id
     domain_name = data.terraform_remote_state.remote-elb.outputs.elb-alb-1-dns-name
 
+    connection_attempts = 3
+    connection_timeout = 120
+    
     custom_origin_config {
       origin_protocol_policy = "match-viewer"
       http_port              = 80
       https_port             = 443
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+
+      origin_read_timeout = 120
+      origin_keepalive_timeout = 120
     }
 
     custom_header {
@@ -80,7 +86,8 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
     compress         = true
 
     // Settings
-    viewer_protocol_policy = "redirect-to-https"
+    # viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all"
     # min_ttl                = 0
     # default_ttl            = 60
     # max_ttl                = 120
@@ -89,7 +96,7 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
     cached_methods  = ["GET", "HEAD"]
 
     // Managed-CachingDisabled
-    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    #  cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     //cache_policy_id = aws_cloudfront_cache_policy.cache-policy-default.id
 
     // Managed-AllViewer
