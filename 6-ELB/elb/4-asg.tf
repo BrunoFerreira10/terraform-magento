@@ -63,6 +63,7 @@ resource "aws_autoscaling_group" "asg-alb-1" {
   }
 
   warm_pool {
+    min_size = 1
     max_group_prepared_capacity = 1
     pool_state = "Stopped"
   }
