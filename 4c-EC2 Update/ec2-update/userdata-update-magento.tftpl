@@ -1,7 +1,10 @@
 #!/bin/bash
 echo "#### Iniciado user data ####"
 
-# Correcoes no php e fpm
+# Correção para health_check
+rm /etc/nginx/sites-enabled/default
+
+# Melhorias no php e fpm
 echo "#### Atualizando o php.ini ####"
 export PHP_INI_PATH=$(php --ini | grep "Loaded Configuration File" | awk '{print $4}')
 
@@ -31,57 +34,50 @@ sed -i 's/^;\?pm.min_spare_servers\s*=.*/pm.min_spare_servers = 20/' "$FPM_POOL_
 sed -i 's/^;\?pm.max_spare_servers\s*=.*/pm.max_spare_servers = 60/' "$FPM_POOL_CONFIG_PATH"
 
 sed -i 's/^;\?;pm.process_idle_timeout\s*=.*/pm.process_idle_timeout = 600s/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;pm.max_requests = 500\s*=.*/pm.max_requests = 500/' "$FPM_POOL_CONFIG_PATH"
+sed -i 's/^;\?;pm.max_requests\s*=.*/pm.max_requests = 500/' "$FPM_POOL_CONFIG_PATH"
 
-sed -i 's/^;\?access.log\s*=.*/access.log = /var/log/php-fpm/pool-access.log/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;slowlog\s*=.*/slowlog = /var/log/php-fpm/pool-slow.log/' "$FPM_POOL_CONFIG_PATH"
+sudo sed -i 's/^;\?;access.log\s*=.*/access.log = \/var\/log\/php-fpm\/pool-access.log/' "$FPM_POOL_CONFIG_PATH"
+sudo sed -i 's/^;\?;slowlog\s*=.*/slowlog = \/var\/log\/php-fpm\/pool-slow.log/' "$FPM_POOL_CONFIG_PATH"
 sed -i 's/^;\?;request_slowlog_timeout\s*=.*/request_slowlog_timeout = 20/' "$FPM_POOL_CONFIG_PATH"
 
-cd /var/www/magento2
-
 # Remover arquivo env.php para evitar conflito na atualização
-rm /var/www/magento2/app/etc/env.php
+# rm /var/www/magento2/app/etc/env.php
 
-sudo -u www-data bin/magento setup:install \
-  --base-url=http://${domain-base} \
-  --db-host=${rds-1-endpoint} \
-  --db-name=${rds-1-db-name} \
-  --db-user=${rds-1-db-username} \
-  --db-password=${rds-1-db-password} \
-  --admin-firstname=${magento-admin-firstname} \
-  --admin-lastname=${magento-admin-lastname} \
-  --admin-email=${magento-admin-email} \
-  --admin-user=${magento-admin-user} \
-  --admin-password=${magento-admin-password} \
-  --backend-frontname=lkj987 \
-  --language=pt_BR \
-  --currency=BRL \
-  --timezone=America/Sao_Paulo \
-  --use-rewrites=1 \
-  --search-engine=opensearch \
-  --opensearch-host=https://${opensearch-endpoint} \
-  --opensearch-port=443 \
-  --opensearch-index-prefix=magento2 \
-  --opensearch-timeout=15 \
-  --cache-backend=redis \
-  --cache-backend-redis-server=${redis-endpoint} \
-  --cache-backend-redis-port=6379 \
-  --cache-backend-redis-db=0 \
-  --page-cache=redis \
-  --page-cache-redis-server=${redis-endpoint} \
-  --page-cache-redis-port=6379 \
-  --page-cache-redis-db=1 \
-  --session-save=redis \
-  --session-save-redis-host=${redis-endpoint} \
-  --session-save-redis-port=6379 \
-  --session-save-redis-db=2 2>&1 | sudo -u www-data tee magento_install_output.log
-
-# sudo -u www-data bin/magento config:set web/secure/base_url https://${domain-base}/
-# sudo -u www-data bin/magento config:set web/secure/base_link_url https://${domain-base}/
-# sudo -u www-data bin/magento config:set web/url/redirect_to_base 0
-
-# Correção para health_check
-rm /etc/nginx/sites-enabled/default
+# Configura magento sem o S3
+# cd /var/www/magento2
+# sudo -u www-data bin/magento setup:install \
+#   --base-url=http://${domain-base} \
+#   --db-host=${rds-1-endpoint} \
+#   --db-name=${rds-1-db-name} \
+#   --db-user=${rds-1-db-username} \
+#   --db-password=${rds-1-db-password} \
+#   --admin-firstname=${magento-admin-firstname} \
+#   --admin-lastname=${magento-admin-lastname} \
+#   --admin-email=${magento-admin-email} \
+#   --admin-user=${magento-admin-user} \
+#   --admin-password=${magento-admin-password} \
+#   --backend-frontname=lkj987 \
+#   --language=pt_BR \
+#   --currency=BRL \
+#   --timezone=America/Sao_Paulo \
+#   --use-rewrites=1 \
+#   --search-engine=opensearch \
+#   --opensearch-host=https://${opensearch-endpoint} \
+#   --opensearch-port=443 \
+#   --opensearch-index-prefix=magento2 \
+#   --opensearch-timeout=15 \
+#   --cache-backend=redis \
+#   --cache-backend-redis-server=${redis-endpoint} \
+#   --cache-backend-redis-port=6379 \
+#   --cache-backend-redis-db=0 \
+#   --page-cache=redis \
+#   --page-cache-redis-server=${redis-endpoint} \
+#   --page-cache-redis-port=6379 \
+#   --page-cache-redis-db=1 \
+#   --session-save=redis \
+#   --session-save-redis-host=${redis-endpoint} \
+#   --session-save-redis-port=6379 \
+#   --session-save-redis-db=2 2>&1 | sudo -u www-data tee magento_install_output.log
 
 # Reiniciar processos
 systemctl daemon-reload
