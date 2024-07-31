@@ -36,7 +36,10 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
   http_version    = "http2and3"
   is_ipv6_enabled = true
   // Aliases = Alternate domains names
-  aliases = ["${var.domain-base}", "www.${var.domain-base}"]
+  aliases = [
+    "${var.domain-base}", 
+    "www.${var.domain-base}"
+  ]
   // Custom SSL certificate
   viewer_certificate {
     acm_certificate_arn      = data.terraform_remote_state.remote-acm-ssl.outputs.acm-certificate-1-arn
