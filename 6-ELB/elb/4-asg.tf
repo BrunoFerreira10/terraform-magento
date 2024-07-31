@@ -15,7 +15,7 @@ resource "aws_autoscaling_policy" "cpu-limit-remove-instance" {
 }
 
 // Auto-scaling group
-resource "" "asg-alb-1" {
+resource "aws_autoscaling_group" "asg-alb-1" {
 
   // Group Details  
   capacity_rebalance = true
