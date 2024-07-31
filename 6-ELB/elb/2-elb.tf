@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "tgrp-1-alb-1" {
     interval            = 20
     timeout             = 15
     healthy_threshold   = 2
-    unhealthy_threshold = 3
+    unhealthy_threshold = 5
     matcher             = "200"
   }
 
