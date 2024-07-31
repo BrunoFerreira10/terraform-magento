@@ -7,19 +7,19 @@ apt update -y
 apt upgrade -y
 
 # Instalação EFS Utils
-# echo "#### Instalação EFS Utils ####"
-# cd /home/ubuntu
-# apt-get -y install git binutils rustc cargo pkg-config libssl-dev
-# git clone https://github.com/aws/efs-utils
-# cd efs-utils
-# ./build-deb.sh
-# apt-get -y install ./build/amazon-efs-utils*deb
+echo "#### Instalação EFS Utils ####"
+cd /home/ubuntu
+apt-get -y install git binutils rustc cargo pkg-config libssl-dev
+git clone https://github.com/aws/efs-utils
+cd efs-utils
+./build-deb.sh
+apt-get -y install ./build/amazon-efs-utils*deb
 
 # Montagem sistema de arquivos do EFS
-# echo "#### Montagem do sistema de arquivos EFS ####"
-# mkdir -p /var/www/magento2
-# mount -t efs ${efs-dns-name}:/ /var/www/magento2
-# echo "${efs-dns-name}:/ /var/www/magento2 efs defaults,_netdev 0 0" >> /etc/fstab
+echo "#### Montagem do sistema de arquivos EFS ####"
+mkdir -p /var/www/magento2
+mount -t efs ${efs-dns-name}:/ /var/www/magento2
+echo "${efs-dns-name}:/ /var/www/magento2 efs defaults,_netdev 0 0" >> /etc/fstab
 
 # Instalação inicial nginx
 echo "#### Instalando o nginx ####"
@@ -37,41 +37,35 @@ systemctl stop apache2
 systemctl disable apache2
 apt-get remove apache2 -y
 
-# Melhorias no php e fpm
+# Atualizar php.ini
 echo "#### Atualizando o php.ini ####"
+
+# Recuperar local do arquivo de configuração e salvar como variável de ambiente.
 export PHP_INI_PATH=$(php --ini | grep "Loaded Configuration File" | awk '{print $4}')
 
+# Set file_uploads to On
+# Set allow_url_fopen to On
+# Set short_open_tag to On
+# Increase memory_limit to 512M
+# Set upload_max_filesize to 128M
+# Increase max_execution_time to 3600
 sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHP_INI_PATH"
 sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHP_INI_PATH"
 sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHP_INI_PATH"
-sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 1024M/' "$PHP_INI_PATH"
+sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 8192M/' "$PHP_INI_PATH"
 sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHP_INI_PATH"
 sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHP_INI_PATH"
 
-export PHPFPM_INI_PATH=$(php-fpm8.3 -i | grep "Loaded Configuration File" | awk '{print $5}')
-sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 1024M/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHPFPM_INI_PATH"
+# export PHPFPM_INI_PATH=$(php-fpm8.3 -i | grep "Loaded Configuration File" | awk '{print $5}')
+# sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 8192M/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHPFPM_INI_PATH"
+# sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHPFPM_INI_PATH"
 
-# Setup no php e fpm
-echo "#### CSetup fpm-pool ####"
-mkdir /var/log/php-fpm
-FPM_POOL_CONFIG_PATH=/etc/php/8.3/fpm/pool.d/www.conf
-sed -i 's/^;\?pm\s*=.*/pm = ondemand/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.max_children\s*=.*/pm.max_children = 80/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.start_servers\s*=.*/pm.start_servers = 20/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.min_spare_servers\s*=.*/pm.min_spare_servers = 20/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.max_spare_servers\s*=.*/pm.max_spare_servers = 60/' "$FPM_POOL_CONFIG_PATH"
 
-sed -i 's/^;\?;pm.process_idle_timeout\s*=.*/pm.process_idle_timeout = 600s/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;pm.max_requests\s*=.*/pm.max_requests = 500/' "$FPM_POOL_CONFIG_PATH"
-
-sudo sed -i 's/^;\?;access.log\s*=.*/access.log = \/var\/log\/php-fpm\/pool-access.log/' "$FPM_POOL_CONFIG_PATH"
-sudo sed -i 's/^;\?;slowlog\s*=.*/slowlog = \/var\/log\/php-fpm\/pool-slow.log/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;request_slowlog_timeout\s*=.*/request_slowlog_timeout = 20/' "$FPM_POOL_CONFIG_PATH"
+systemctl restart nginx
 
 # Instalando Composer
 echo "#### Instalando Composer ####"
@@ -141,7 +135,12 @@ sudo -u www-data bin/magento setup:install \
   --session-save=redis \
   --session-save-redis-host=${redis-endpoint} \
   --session-save-redis-port=6379 \
-  --session-save-redis-db=2 2>&1 | sudo -u www-data tee magento_install_output.log
+  --session-save-redis-db=2 \
+  --remote-storage-driver=aws-s3 \
+  --remote-storage-prefix=magento2 \
+  --remote-storage-bucket=${static-files-bucket-name} \
+  --remote-storage-region=us-east-1 \
+  --remote-storage-path-style=1 2>&1 | sudo -u www-data tee magento_install_output.log
 
 # Configurar dados de autenticação necessários para instalar loja demo
 sudo -u www-data bash -c 'cat <<EOF > /var/www/magento2/var/composer_home/auth.json
@@ -189,7 +188,7 @@ sudo -u www-data bin/magento setup:upgrade
 
 # Sincronizar S3
 echo "#### Sincronizar remote-storage no S3 ####"
-# sudo -u www-data bin/magento remote-storage:sync
+sudo -u www-data bin/magento remote-storage:sync
 
 # Configurações para Brasil
 echo "#### Configurações Brasil ####"
@@ -224,12 +223,7 @@ server {
 }
 EOF'
 
-# Correção para health_check
-rm /etc/nginx/sites-enabled/default
-
 systemctl daemon-reload
-
-sudo systemctl restart php8.3-fpm.service
 systemctl restart nginx
 
 # Informa fim do user data para autorizar Terraform a prosseguir instalação.
