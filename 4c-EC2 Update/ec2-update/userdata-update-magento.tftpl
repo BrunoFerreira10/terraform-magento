@@ -1,45 +1,6 @@
 #!/bin/bash
 echo "#### Iniciado user data ####"
 
-# Correção para health_check
-rm /etc/nginx/sites-enabled/default
-
-# Melhorias no php e fpm
-echo "#### Atualizando o php.ini ####"
-export PHP_INI_PATH=$(php --ini | grep "Loaded Configuration File" | awk '{print $4}')
-
-sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHP_INI_PATH"
-sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHP_INI_PATH"
-sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHP_INI_PATH"
-sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 1024M/' "$PHP_INI_PATH"
-sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHP_INI_PATH"
-sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHP_INI_PATH"
-
-export PHPFPM_INI_PATH=$(php-fpm8.3 -i | grep "Loaded Configuration File" | awk '{print $5}')
-sed -i 's/^;\?file_uploads\s*=.*/file_uploads = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?allow_url_fopen\s*=.*/allow_url_fopen = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?short_open_tag\s*=.*/short_open_tag = On/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?memory_limit\s*=.*/memory_limit = 1024M/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?upload_max_filesize\s*=.*/upload_max_filesize = 128M/' "$PHPFPM_INI_PATH"
-sed -i 's/^;\?max_execution_time\s*=.*/max_execution_time = 3600/' "$PHPFPM_INI_PATH"
-
-# Setup no php e fpm
-echo "#### CSetup fpm-pool ####"
-mkdir /var/log/php-fpm
-FPM_POOL_CONFIG_PATH=/etc/php/8.3/fpm/pool.d/www.conf
-sed -i 's/^;\?pm\s*=.*/pm = ondemand/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.max_children\s*=.*/pm.max_children = 80/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.start_servers\s*=.*/pm.start_servers = 20/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.min_spare_servers\s*=.*/pm.min_spare_servers = 20/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?pm.max_spare_servers\s*=.*/pm.max_spare_servers = 60/' "$FPM_POOL_CONFIG_PATH"
-
-sed -i 's/^;\?;pm.process_idle_timeout\s*=.*/pm.process_idle_timeout = 600s/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;pm.max_requests\s*=.*/pm.max_requests = 500/' "$FPM_POOL_CONFIG_PATH"
-
-sudo sed -i 's/^;\?;access.log\s*=.*/access.log = \/var\/log\/php-fpm\/pool-access.log/' "$FPM_POOL_CONFIG_PATH"
-sudo sed -i 's/^;\?;slowlog\s*=.*/slowlog = \/var\/log\/php-fpm\/pool-slow.log/' "$FPM_POOL_CONFIG_PATH"
-sed -i 's/^;\?;request_slowlog_timeout\s*=.*/request_slowlog_timeout = 20/' "$FPM_POOL_CONFIG_PATH"
-
 # Remover arquivo env.php para evitar conflito na atualização
 # rm /var/www/magento2/app/etc/env.php
 
@@ -80,13 +41,13 @@ sed -i 's/^;\?;request_slowlog_timeout\s*=.*/request_slowlog_timeout = 20/' "$FP
 #   --session-save-redis-db=2 2>&1 | sudo -u www-data tee magento_install_output.log
 
 # Reiniciar processos
-systemctl daemon-reload
+# systemctl daemon-reload
 
-sudo systemctl restart php8.3-fpm.service
-systemctl restart nginx
+# sudo systemctl restart php8.3-fpm.service
+# systemctl restart nginx
 
 # Limpar cache
-sudo -u www-data bin/magento cache:flush
+#sudo -u www-data bin/magento cache:flush
 
 # Informa fim do user data para autorizar Terraform a prosseguir instalação.
 echo "### Finalizado user data ###"
