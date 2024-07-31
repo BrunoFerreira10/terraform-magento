@@ -15,7 +15,7 @@ resource "aws_autoscaling_policy" "cpu-limit-remove-instance" {
 }
 
 // Auto-scaling group
-resource "aws_autoscaling_group" "asg-alb-1" {
+resource "" "asg-alb-1" {
 
   // Group Details  
   capacity_rebalance = true
@@ -52,6 +52,20 @@ resource "aws_autoscaling_group" "asg-alb-1" {
 
   // Advanced configuration
   default_cooldown = 60
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 100
+      max_healthy_percentage = 110
+      skip_matching = true
+    }
+  }
+
+  warm_pool {
+    max_group_prepared_capacity = 1
+    pool_state = "Stopped"
+  }
 
   // Metrics
   enabled_metrics = [
