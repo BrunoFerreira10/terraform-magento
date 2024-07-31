@@ -65,8 +65,8 @@ resource "aws_autoscaling_group" "asg-alb-1" {
   warm_pool {
     min_size = 1
     max_group_prepared_capacity = 1
-    pool_state = "Hibernated"
-
+    pool_state = "Stopped" #"Hibernated"
+    
     instance_reuse_policy {
       reuse_on_scale_in = false
     }
