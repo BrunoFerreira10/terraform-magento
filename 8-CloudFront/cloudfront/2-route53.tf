@@ -1,15 +1,13 @@
-// Hosted Zone
 data "aws_route53_zone" "hosted_zone" {
   name         = var.domain-base
   private_zone = false
 }
 
-// DNS Record - A
-resource "aws_route53_record" "record_A" {
+resource "aws_route53_record" "record_media" {
 
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.hosted_zone.zone_id
-  name            = var.domain-base
+  name            = "media.${var.domain-base}"
   type            = "A"
 
   alias {
@@ -19,12 +17,11 @@ resource "aws_route53_record" "record_A" {
   }
 }
 
-// DNS Record - CNAME - www
-resource "aws_route53_record" "record_WWW" {
+resource "aws_route53_record" "record_static" {
 
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.hosted_zone.zone_id
-  name            = "www.${var.domain-base}"
+  name            = "static.${var.domain-base}"
   type            = "A"
 
   alias {
