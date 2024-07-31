@@ -7,19 +7,19 @@ apt update -y
 apt upgrade -y
 
 # Instalação EFS Utils
-# echo "#### Instalação EFS Utils ####"
-# cd /home/ubuntu
-# apt-get -y install git binutils rustc cargo pkg-config libssl-dev
-# git clone https://github.com/aws/efs-utils
-# cd efs-utils
-# ./build-deb.sh
-# apt-get -y install ./build/amazon-efs-utils*deb
+echo "#### Instalação EFS Utils ####"
+cd /home/ubuntu
+apt-get -y install git binutils rustc cargo pkg-config libssl-dev
+git clone https://github.com/aws/efs-utils
+cd efs-utils
+./build-deb.sh
+apt-get -y install ./build/amazon-efs-utils*deb
 
 # Montagem sistema de arquivos do EFS
-# echo "#### Montagem do sistema de arquivos EFS ####"
-# mkdir -p /var/www/magento2
-# mount -t efs ${efs-dns-name}:/ /var/www/magento2
-# echo "${efs-dns-name}:/ /var/www/magento2 efs defaults,_netdev 0 0" >> /etc/fstab
+echo "#### Montagem do sistema de arquivos EFS ####"
+mkdir -p /var/www/magento2
+mount -t efs ${efs-dns-name}:/ /var/www/magento2
+echo "${efs-dns-name}:/ /var/www/magento2 efs defaults,_netdev 0 0" >> /etc/fstab
 
 # Instalação inicial nginx
 echo "#### Instalando o nginx ####"
