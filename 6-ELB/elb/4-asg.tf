@@ -19,9 +19,9 @@ resource "aws_autoscaling_group" "asg-alb-1" {
 
   // Group Details  
   capacity_rebalance = true
-  desired_capacity   = 0
-  max_size           = 0
-  min_size           = 0
+  desired_capacity   = 1
+  max_size           = 1
+  min_size           = 4
 
   lifecycle {
     create_before_destroy = true
@@ -63,8 +63,8 @@ resource "aws_autoscaling_group" "asg-alb-1" {
   }
 
   warm_pool {
-    min_size = 0
-    max_group_prepared_capacity = 0
+    min_size = 1
+    max_group_prepared_capacity = 1
     pool_state = "Stopped"
   }
 
