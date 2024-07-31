@@ -95,8 +95,9 @@ resource "aws_cloudfront_distribution" "cloudfront-1" {
     allowed_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods  = ["GET", "HEAD"]
 
-    // Managed-CachingDisabled
-    #  cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    
+    # cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" // Managed-CachingDisabled
+    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" // Managed-CachingOptimized
     //cache_policy_id = aws_cloudfront_cache_policy.cache-policy-default.id
 
     // Managed-AllViewer
