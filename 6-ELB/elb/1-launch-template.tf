@@ -8,9 +8,9 @@ resource "aws_launch_template" "ltplt-1" {
   image_id = data.terraform_remote_state.remote-ami.outputs.ami-ami-id
 
   // Instance type
-  instance_type = "t3a.xlarge"  
+  instance_type = "t3a.large"
 
-  // Key pair (ec2 ssh login)  
+  // Key pair (ec2 ssh login)
   key_name = var.ec2-ssh-keypair-name
 
   iam_instance_profile {
