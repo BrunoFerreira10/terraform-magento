@@ -6,8 +6,6 @@ cd /var/www/magento2
 # Remover arquivo env.php para evitar conflito na atualização
 rm /var/www/magento2/app/etc/env.php
 
-echo "#### Novo RDS endpoint: ${rds-1-endpoint}"
-
 sudo -u www-data bin/magento setup:install \
   --base-url=http://${domain-base} \
   --db-host=${rds-1-endpoint} \
@@ -45,6 +43,9 @@ sudo -u www-data bin/magento setup:install \
 # sudo -u www-data bin/magento config:set web/secure/base_url https://${domain-base}/
 # sudo -u www-data bin/magento config:set web/secure/base_link_url https://${domain-base}/
 # sudo -u www-data bin/magento config:set web/url/redirect_to_base 0
+
+# Correção para health_check
+rm /etc/nginx/sites-enabled/default
 
 systemctl daemon-reload
 systemctl restart nginx
