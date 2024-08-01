@@ -12,12 +12,6 @@ resource "aws_lb_target_group" "tgrp-1-alb-1" {
     cookie_duration = 3600
   }
 
-  # stickiness {
-  #   enabled     = true
-  #   type        = "app_cookie"
-  #   cookie_name = "PHPSESSID"
-  # }
-
   health_check {
     enabled             = true
     protocol            = "HTTP"
@@ -27,7 +21,7 @@ resource "aws_lb_target_group" "tgrp-1-alb-1" {
     timeout             = 15
     healthy_threshold   = 2
     unhealthy_threshold = 5
-    matcher             = "200-499"
+    matcher             = "200"
   }
 
   deregistration_delay = 15
